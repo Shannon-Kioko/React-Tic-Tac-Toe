@@ -48,13 +48,14 @@ ul {
 
 * {
   box-sizing: border-box;
+  background: gradient(#FE6442, #F53A45);
+
 }
 
 body {
   font-family: sans-serif;
   margin: 20px;
   padding: 0;
-  background: gradient(#FE6442, #F53A45);
 }
 
 .square {
@@ -86,14 +87,85 @@ body {
   display: table;
 }
 
+.historyButton {
+  /* < !-- HTML !--><button class="button-89" role="button">Button 89</button> */
+
+  /* CSS */
+
+  --b: 3px;
+  /* border thickness */
+  --s: .25em;
+  /* size of the corner */
+  --color: #373B44;
+  margin-bottom: 0.6rem;
+
+
+  padding: calc(.5em + var(--s)) calc(.9em + var(--s));
+  color: var(--color);
+  --_p: var(--s);
+  background:
+    conic-gradient(from 90deg at var(--b) var(--b), #0000 90deg, var(--color) 0) var(--_p) var(--_p)/calc(100% - var(--b) - 2*var(--_p)) calc(100% - var(--b) - 2*var(--_p));
+  transition: .3s linear, color 0s, background-color 0s;
+  outline: var(--b) solid #0000;
+  outline-offset: .6em;
+  font-size: 16px;
+
+  border: 0;
+
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.historyButton:hover,
+.historyButton:focus-visible {
+  --_p: 0px;
+  outline-color: var(--color);
+  outline-offset: .05em;
+}
+
+.historyButton:active {
+  background: var(--color);
+  color: #fff;
+}
+
+
+/* .historyButton {
+  align-items: center;
+  background: #FFFFFF;
+  border: 0 solid #E2E8F0;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  box-sizing: border-box;
+  color: #CC5500;
+  display: inline-flex;
+  font-family: Inter, sans-serif;
+  font-size: 1rem;
+  font-weight: 700;
+  height: 56px;
+  justify-content: center;
+  line-height: 24px;
+  overflow-wrap: break-word;
+  padding: 0.5rem;
+  text-decoration: none;
+  width: auto;
+  border-radius: 8px;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  margin-bottom: 1rem;
+} */
+
+
 .status {
   margin-bottom: 10px;
 }
+
 .game {
   display: flex;
   flex-direction: row;
 }
 
 .game-info {
-  margin-left: 20px;
+  margin-left: 15rem;
 }

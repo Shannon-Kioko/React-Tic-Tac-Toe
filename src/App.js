@@ -7,12 +7,74 @@ function Square({ value, onSquareClick }) {
     );
 }
 
-export default function Board() {
-    const [xIsNext, setXIsNext] = useState(true);
-    const [squares, setSquares] = useState(Array(9).fill(null))
+export default function Game() {
+    const [history, setHistory] = useState([Array(9).fill(null)]);
+    const [currentMove, setCurrentMove] = useState(0);
+    const xIsNext = currentMove % 2 === 0;
+    // changing so the currently sleected move is rendered instead
+    // of always rendering the final move
+
+    // const currentSquares = history[history.length - 1];
+    const currentSquares = currentMove < history.length ? history[currentMove] : undefined;
+    console.log(history[currentMove]);
+    console.log("Current Squaress", currentSquares);
+
+    function handlePlay(nextSquares) {
+        /* 
+        * when we go back in time, we want to add nextSquares after the portion of history we have
+        * Hence every time a move is made, currentMove should be updated to the latest move 
+        */
+        const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+        console.log("Next History", nextHistory);
+        setHistory(nextHistory);
+        setCurrentMove(nextHistory.length - 1);
+    }
+    
+    function jumpTo(nextMove) {
+        setCurrentMove(nextMove);
+        // true if 0, false if 1
+    }
+
+    // Moved between all the arrays in the history array
+    // Move is the index of the arrays in the history array
+
+    const moves = history.map((squares, move) => {
+        let description;
+        if (move > 0) {
+            description = 'Go to move #' + move;
+        } else {
+            description = 'Go to game start';
+        }
+        console.warn("history after call", history);
+        console.warn(`Length ${history.length}\n Move ${move} history:\n ${history}`);
+        console.warn("Current Squares array", currentSquares);
+        return (
+            <>
+                <li key={move}>
+                    <button className="historyButton" onClick={() => jumpTo(move)}>{description}</button>
+                </li>
+            </>
+        )
+    });
+
+
+    return (
+        <div className="game">
+            <div className="game-board">
+                <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
+            </div>
+            <div className="game-info">
+                <ol>{moves}</ol>
+            </div>
+        </div>
+    )
+}
+
+function Board({ xIsNext, squares, onPlay }) {
     const [status, setStatus] = useState("");
     function handleClick(i) {
-        if (calculateWinner(squares) || squares[i]) {
+        console.log("Squarrrrrrrrrres in Game", squares);
+        if (squares && (calculateWinner(squares) || squares[i])) {
             return
         };
         const nextSquares = squares.slice();
@@ -23,21 +85,16 @@ export default function Board() {
         }
         // updates the state of squares, triggers re-rendering of the components
         // that depend on the squares state
-        setSquares(nextSquares);
-        setXIsNext(!xIsNext)
-        console.log(squares);
-        console.log('Nexxxxxxxt', nextSquares);
+        onPlay(nextSquares);
 
-        console.log("status b4444444444444" + status);
         const winner = calculateWinner(nextSquares)
         setStatus((prevStatus) => {
             const newStatus = winner ? "Winner: " + winner : "Next player: " + (!xIsNext ? "X" : "O")
             console.log("status after" + newStatus);
-            console.log("X is next" + xIsNext + "and" + xIsNext? "X" : "O");
+            console.log("X is next" + xIsNext + "and" + xIsNext ? "X" : "O");
             return newStatus;
 
         })
-        console.log("status afteeeeeeeeeeeerrrrrrrrrrrrrr" + status);
         console.log(winner);
     }
     return (
@@ -68,6 +125,7 @@ export default function Board() {
     )
 }
 
+
 function calculateWinner(squares) {
     const winnins = [
         [0, 1, 2],
@@ -82,7 +140,6 @@ function calculateWinner(squares) {
     for (let i = 0; i < winnins.length; i++) {
         const [a, b, c] = winnins[i];
         if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            console.log(squares[a], squares[b], squares[c]);
             return squares[a];
         }
     }
